@@ -2,7 +2,6 @@
 
 describe('Criação de Produto - POST /auth/products/add', () => {
   let token;
-
   before(() => {
     cy.apiLogin().then(user => {
       token = Cypress.env('token');

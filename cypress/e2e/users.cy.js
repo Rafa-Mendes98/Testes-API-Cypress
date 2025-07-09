@@ -1,22 +1,41 @@
 /// <reference types="cypress" />
 
+import chaiJsonSchema from 'chai-json-schema';
+chai.use(chaiJsonSchema);
+
+const userSchema = {
+  type: 'object',
+  required: [
+    'id', 'firstName', 'lastName', 'age', 'gender',
+    'email', 'username', 'birthDate', 'role'
+  ],
+  properties: {
+    id: { type: 'number' },
+    firstName: { type: 'string' },
+    lastName: { type: 'string' },
+    age: { type: 'number' },
+    gender: { type: 'string' },
+    email: { type: 'string' },
+    username: { type: 'string' },
+    birthDate: { type: 'string' },
+    role: { type: 'string' }
+  }
+};
+
 describe('Verificação de Usuários - GET /users', () => {
-it('Deve retornar status 200, 30 usuários por página e todos os campos obrigatórios', () => {
-  cy.request('/users').then((response) => {
-    expect(response.status).to.eq(200);
-    expect(response.body).to.have.property('users');
-    expect(response.body.users.length).to.be.at.most(30);
-    response.body.users.forEach(user => {
-      expect(user).to.include.all.keys(
-        'id', 'firstName', 'lastName', 'age', 'gender',
-        'email', 'username', 'birthDate', 'role'
-      );
+  it('Deve retornar status 200, 30 usuários por página e todos os campos obrigatórios', () => {
+    cy.request('/users').then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).to.have.property('users');
+      expect(response.body.users.length).to.be.at.most(30);
+      response.body.users.forEach(user => {
+        expect(user).to.be.jsonSchema(userSchema);
+      });
+      expect(response.body).to.have.property('total');
+      expect(response.body).to.have.property('skip');
+      expect(response.body).to.have.property('limit');
     });
-    expect(response.body).to.have.property('total');
-    expect(response.body).to.have.property('skip');
-    expect(response.body).to.have.property('limit');
   });
-});
 
   it('Deve paginar corretamente', () => {
     cy.request('/users?limit=10&skip=10').then((response) => {
@@ -26,4 +45,13 @@ it('Deve retornar status 200, 30 usuários por página e todos os campos obrigat
       expect(response.body.limit).to.eq(10);
     });
   });
+
+  // caso com intercept com erro, preciso de algum
+  it('Deve simular falha de rede na chamada /users e validar tratamento', () => {
+    cy.intercept('GET', '**/users**', { forceNetworkError: true }).as('getUsersError');
+    cy.wait('@getUsersError');
+    cy.get('.toast-error')
+      .should('be.visible')
+      .and('contain', 'Erro ao carregar usuários');
+    });
 });
