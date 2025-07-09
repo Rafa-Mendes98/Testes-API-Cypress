@@ -1,5 +1,5 @@
 {
-  "name": "cypress-api-tests",
+  "name": "Testes-API-Cypress",
   "version": "1.0.0",
   "description": "Desafio técnico de automação de testes de API com Cypress.",
   "scripts": {
