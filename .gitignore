@@ -1,0 +1,11 @@
+cypress.env.json
+node_modules/
+dist/
+coverage/
+cypress/screenshots/
+cypress/videos/
+*.log
+.DS_Store
+.env
+.report/
+mochawesome-report/
