@@ -10,9 +10,9 @@ Cypress.Commands.add('apiLogin', () => {
       body: { username, password },
       failOnStatusCode: false
     }).then((response) => {
-      expect(response.status).to.eq(201);
-      expect(response.body).to.have.property('token');
-      Cypress.env('token', response.body.token);
+      expect(response.status).to.eq(200);
+      expect(response.body).to.have.property('accessToken');
+      Cypress.env('token', response.body.accessToken);
       return response.body;
     });
   });

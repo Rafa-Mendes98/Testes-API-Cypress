@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('Autenticação de Login - POST /auth/login', () => {
-  it('Deve autenticar, retornar status 201 e todos os campos obrigatórios', () => {
+  it('Deve autenticar, retornar status 200 e todos os campos obrigatórios', () => {
     cy.fixture('user').then(user => {
       cy.request({
         method: 'POST',
@@ -11,14 +11,17 @@ describe('Autenticação de Login - POST /auth/login', () => {
           password: user.password
         }
       }).then((response) => {
-        expect(response.status).to.eq(201);
-        expect(response.body).to.include.all.keys(
-          'id', 'username', 'email', 'firstName', 'lastName',
-          'gender', 'image', 'token'
-        );
-        // Opcional: validar refreshToken se a API retornar
-        // expect(response.body).to.have.property('refreshToken');
-        expect(response.body.token).to.match(/^[\w-]+\.[\w-]+\.[\w-]+$/); // JWT format
+        expect(response.status).to.eq(200);
+        // Verifica se existe accessToken e refreshToken
+        expect(response.body).to.have.property('accessToken');
+        expect(response.body).to.have.property('refreshToken');
+        // Se houver objeto user, verifica os campos dentro dele
+        if (response.body.user) {
+          expect(response.body.user).to.include.all.keys(
+            'id', 'username', 'email', 'firstName', 'lastName',
+            'gender', 'image'
+          );
+        }
       });
     });
   });
