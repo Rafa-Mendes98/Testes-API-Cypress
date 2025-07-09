@@ -47,8 +47,8 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/cypress-api-tests.git
-cd cypress-api-tests
+git clone https://github.com/Rafa-Mendes98/Testes-API-Cypress.git
+cd Testes-API-Cypress
 ```
 
 ### 2. Instale as dependências
