@@ -30,7 +30,7 @@ jobs:
         run: npm run full:report
 
       - name: 📁 Upload do relatório como artefato
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mochawesome-report
           path: mochawesome-report/
