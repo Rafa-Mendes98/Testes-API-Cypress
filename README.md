@@ -35,8 +35,11 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
    - Teste de status code e contrato
 
     √ CT9 - Deve criar produto autenticado e validar retorno
+
     √ CT10 - Deve falhar ao criar produto sem token
+
     √ CT11 - Deve aceitar dados inválidos (comportamento inesperado da API)
+
     √ CT12 - Deve simular falha ao criar produto com dados inválidos
 
 4. **Consulta de Usuário por ID**
@@ -45,6 +48,7 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
    - Teste de status code, precisão e completude dos dados
 
     √ CT13 - Deve retornar todos os campos esperados para o usuário ID 1
+
     √ CT14 - Deve retornar 404 para usuário inexistente
 
 5. **Verificação de Usuários**
@@ -54,8 +58,11 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
    - Teste de status code e contrato
 
     √ CT15 - Deve retornar status 200, 30 usuários por página e todos os campos obrigatórios
+
     √ CT16 - Deve validar continuidade dos dados entre páginas (paginação)
+
     √ CT17 - Deve validar valores válidos nos campos obrigatórios de cada usuário
+
     √ CT18 - Deve paginar corretamente
 
 ## Diferenciais
