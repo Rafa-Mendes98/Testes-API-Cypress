@@ -27,7 +27,7 @@ jobs:
           echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
 
       - name: 🧪 Executar testes Cypress com Mochawesome
-        run: npm run full:report
+        run: npm run test:report
 
       - name: 📁 Upload do relatório como artefato
         uses: actions/upload-artifact@v4
