@@ -13,15 +13,22 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
    - Teste de status code e contrato
 
     √ CT1 - Deve autenticar e acessar dados do usuário
+
     √ CT2 - Deve falhar no login com senha inválida
+
     √ CT3️ - Deve simular refresh de token (mock)
+
     √ CT4 - Deve detectar token expirado (simulado)
+
     √ CT5 - Deve remover tokens do localStorage ao fazer logout
+
     √ CT6 - Deve autenticar com senha em hash MD5 e retornar tokens válidos (se suportado)
+
     √ CT7 - Deve gerar hash MD5 válido e enviá-lo no login
+
     √ CT8 - Deve simular falha no login com interceptação
 
-2. **Criação de Produto**
+3. **Criação de Produto**
    Endpoint: `POST https://dummyjson.com/auth/products/add`
    - Requisição autenticada usando token
    - Validação dos dados enviados e recebidos
@@ -32,7 +39,7 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
     √ CT11 - Deve aceitar dados inválidos (comportamento inesperado da API)
     √ CT12 - Deve simular falha ao criar produto com dados inválidos
 
-3. **Consulta de Usuário por ID**
+4. **Consulta de Usuário por ID**
    Endpoint: `GET https://dummyjson.com/users/1`
    - Checagem de todos os campos esperados para o usuário
    - Teste de status code, precisão e completude dos dados
@@ -40,7 +47,7 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
     √ CT13 - Deve retornar todos os campos esperados para o usuário ID 1
     √ CT14 - Deve retornar 404 para usuário inexistente
 
-4. **Verificação de Usuários**
+5. **Verificação de Usuários**
    Endpoint: `GET https://dummyjson.com/users`
    - Checagem dos campos obrigatórios em cada usuário
    - Verificação de paginação
