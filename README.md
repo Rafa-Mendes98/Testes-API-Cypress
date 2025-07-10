@@ -182,3 +182,23 @@ Fluxo do CI:
 ```json
 {"apiBaseUrl":"https://dummyjson.com","username":"seu_user","password":"sua_senha"}
 ```
+
+---
+
+## ✅ Recursos e Técnicas Utilizadas
+
+Este projeto foi desenvolvido com foco em boas práticas de automação de testes e atende aos critérios esperados no desafio técnico, incluindo:
+
+- 🧩 **Comandos customizados** para evitar repetição e tornar os testes mais legíveis
+- 📁 **Estrutura modular** com separação em pastas e uso de **fixtures**
+- 🔁 **Setup com `beforeEach`** para garantir ambiente limpo e testes independentes
+- 🧪 **Testes em formato BDD** com `describe`/`it`, facilitando a leitura e entendimento
+- 🔄 **Interceptações com `cy.intercept`** para simular falhas, delays e mocks
+- 📊 **Geração de relatórios automatizados** com **Mochawesome**, facilitando a análise dos resultados
+- ⚙️ **Integração contínua (CI)** com GitHub Actions para execução automática a cada push ou PR
+- 🔐 **Uso de variáveis de ambiente** (`cypress.env.json`) para proteger dados sensíveis
+- 📜 **Validação de contratos e schemas** com **chai-json-schema**
+
+> ✅ Todos os itens acima foram aplicados com sucesso neste projeto, demonstrando domínio das ferramentas e práticas modernas de testes automatizados com Cypress.
+
+
