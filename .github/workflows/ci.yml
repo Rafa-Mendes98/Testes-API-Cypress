@@ -2,28 +2,35 @@ name: Cypress Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
   pull_request:
+    branches: [main]
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: 📥 Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: 🔧 Instalar Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install dependencies
-        run: npm ci
-      - name: Copy env example
-        run: cp cypress.env.json.example cypress.env.json
-      - name: Run Cypress tests
-        run: npm test
-      - name: Generate HTML Report
-        run: npm run report
-      - name: Upload mochawesome report
-        uses: actions/upload-artifact@v4
+
+      - name: 📦 Instalar dependências
+        run: npm install
+
+      - name: 🔐 Criar arquivo cypress.env.json
+        run: |
+          echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
+
+      - name: 🧪 Executar testes Cypress com Mochawesome
+        run: npm run full:report
+
+      - name: 📁 Upload do relatório como artefato
+        uses: actions/upload-artifact@v3
         with:
           name: mochawesome-report
           path: mochawesome-report/

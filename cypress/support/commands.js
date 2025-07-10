@@ -1,3 +1,4 @@
+// <reference types="cypress" />
 import CryptoJS from 'crypto-js';
 
 // Comando customizado para gerar hash MD5
@@ -5,16 +6,7 @@ Cypress.Commands.add('md5', (input) => {
   return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
 });
 
-Cypress.Commands.add('loginViaBrowser', (username, password) => {
-  cy.window().then((win) => {
-    return win.fetch('https://dummyjson.com/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    }).then(res => res.json());
-  });
-});
-
+// Comando customizado para decodificar JWT
 Cypress.Commands.add('decodeJWT', (token) => {
   if (!token || typeof token !== 'string' || !token.includes('.')) {
     throw new Error('Token JWT inválido ou indefinido');
@@ -24,31 +16,34 @@ Cypress.Commands.add('decodeJWT', (token) => {
   return JSON.parse(decoded);
 });
 
+// Efetua login e armazena tokens no localStorage
 Cypress.Commands.add('login', () => {
-  return cy.fixture('user').then((user) => {
-    return cy.request({
-      method: 'POST',
-      url: 'https://dummyjson.com/auth/login',
-      body: {
-        username: user.username,
-        password: user.password,
-      },
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      const { accessToken, refreshToken } = response.body;
-      window.localStorage.setItem('accessToken', accessToken);
-      window.localStorage.setItem('refreshToken', refreshToken);
-      return { accessToken, refreshToken };
-    });
+  return cy.request({
+    method: 'POST',
+    url: 'https://dummyjson.com/auth/login',
+    body: {
+      username: Cypress.env('username'),
+      password: Cypress.env('password')
+    }
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+    const { accessToken, refreshToken } = response.body;
+  return cy.window().then((win) => {
+    win.localStorage.setItem('accessToken', accessToken);
+    win.localStorage.setItem('refreshToken', refreshToken);
+    return { accessToken, refreshToken };
   });
 });
+});
 
+// Comando customizado para definir o header de autenticação
 Cypress.Commands.add('setAuthHeader', (token) => {
   Cypress.env('authHeader', {
     Authorization: `Bearer ${token}`,
   });
 });
 
+// Comando customizado para logout e remoção de tokens do localStorage
 Cypress.Commands.add('logout', () => {
   cy.window().then((win) => {
     win.localStorage.removeItem('accessToken');
@@ -58,20 +53,18 @@ Cypress.Commands.add('logout', () => {
 
 // Comando customizado para login e armazenamento de token
 Cypress.Commands.add('apiLogin', () => {
-  cy.fixture('user').then(user => {
-    const username = Cypress.env('username') || user.username;
-    const password = Cypress.env('password') || user.password;
-    cy.request({
-      method: 'POST',
-      url: '/auth/login',
-      body: { username, password },
-      failOnStatusCode: false
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      expect(response.body).to.have.property('accessToken');
-      Cypress.env('token', response.body.accessToken);
-      return response.body;
-    });
+  return cy.request({
+    method: 'POST',
+    url: '/auth/login',
+    body: {
+      username: Cypress.env('username'),
+      password: Cypress.env('password')
+    }
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+    const token = response.body.accessToken;
+    Cypress.env('token', token); // seta token no Cypress.env
+    return token;
   });
 });
 

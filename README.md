@@ -6,32 +6,54 @@ Este projeto foi desenvolvido como solução para o desafio técnico de automaç
 
 ## Funcionalidades testadas
 
-1. **Verificação de Usuários**  
-   Endpoint: `GET https://dummyjson.com/users`  
-   - Checagem dos campos obrigatórios em cada usuário  
-   - Verificação de paginação  
+1. **Autenticação de Login**
+   Endpoint: `POST https://dummyjson.com/auth/login`
+   - Login com validação dos campos obrigatórios
+   - Validação do token JWT
    - Teste de status code e contrato
 
-2. **Autenticação de Login**  
-   Endpoint: `POST https://dummyjson.com/auth/login`  
-   - Login com validação dos campos obrigatórios  
-   - Validação do token JWT  
+    √ CT1 - Deve autenticar e acessar dados do usuário
+    √ CT2 - Deve falhar no login com senha inválida
+    √ CT3️ - Deve simular refresh de token (mock)
+    √ CT4 - Deve detectar token expirado (simulado)
+    √ CT5 - Deve remover tokens do localStorage ao fazer logout
+    √ CT6 - Deve autenticar com senha em hash MD5 e retornar tokens válidos (se suportado)
+    √ CT7 - Deve gerar hash MD5 válido e enviá-lo no login
+    √ CT8 - Deve simular falha no login com interceptação
+
+2. **Criação de Produto**
+   Endpoint: `POST https://dummyjson.com/auth/products/add`
+   - Requisição autenticada usando token
+   - Validação dos dados enviados e recebidos
    - Teste de status code e contrato
 
-3. **Criação de Produto**  
-   Endpoint: `POST https://dummyjson.com/auth/products/add`  
-   - Requisição autenticada usando token  
-   - Validação dos dados enviados e recebidos  
-   - Teste de status code e contrato
+    √ CT9 - Deve criar produto autenticado e validar retorno
+    √ CT10 - Deve falhar ao criar produto sem token
+    √ CT11 - Deve aceitar dados inválidos (comportamento inesperado da API)
+    √ CT12 - Deve simular falha ao criar produto com dados inválidos
 
-4. **Consulta de Usuário por ID**  
-   Endpoint: `GET https://dummyjson.com/users/1`  
-   - Checagem de todos os campos esperados para o usuário  
+3. **Consulta de Usuário por ID**
+   Endpoint: `GET https://dummyjson.com/users/1`
+   - Checagem de todos os campos esperados para o usuário
    - Teste de status code, precisão e completude dos dados
+
+    √ CT13 - Deve retornar todos os campos esperados para o usuário ID 1
+    √ CT14 - Deve retornar 404 para usuário inexistente
+
+4. **Verificação de Usuários**
+   Endpoint: `GET https://dummyjson.com/users`
+   - Checagem dos campos obrigatórios em cada usuário
+   - Verificação de paginação
+   - Teste de status code e contrato
+
+    √ CT15 - Deve retornar status 200, 30 usuários por página e todos os campos obrigatórios
+    √ CT16 - Deve validar continuidade dos dados entre páginas (paginação)
+    √ CT17 - Deve validar valores válidos nos campos obrigatórios de cada usuário
+    √ CT18 - Deve paginar corretamente
 
 ## Diferenciais
 
-- Comandos customizados para login e requisições autenticadas
+- Comandos customizados
 - Organização em pastas e uso de fixtures
 - Uso de `beforeEach` para setup
 - Testes em formato BDD (`describe`/`it`)
@@ -65,7 +87,7 @@ Copie o arquivo de exemplo:
 cp cypress.env.json.example cypress.env.json
 ```
 
-Edite o arquivo `cypress.env.json` com seus dados (se necessário).  
+Edite o arquivo `cypress.env.json` com seus dados.
 **Obs:** Não faça commit desse arquivo.
 
 ### 4. Executando os testes
@@ -85,21 +107,8 @@ npx cypress open
 ### 5. Gerar relatório (exemplo com mochawesome)
 
 ```bash
-npx cypress run --reporter mochawesome
+npm run full:report
 ```
-
----
-
-## Boas práticas adotadas
-
-- **Comandos customizados:** Veja em `cypress/support/commands.js`
-- **Fixtures:** Exemplos de payloads em `cypress/fixtures/`
-- **Organização:** Separação por arquivos de teste para cada endpoint
-- **Intercepts:** Exemplo de uso em `e2e/users.cy.js`
-- **Validação de contrato:** Uso de asserções para campos obrigatórios
-- **Git:** `.gitignore` robusto, sem versionamento de chaves, README completo
-
----
 
 ## Estrutura de pastas
 
@@ -112,7 +121,6 @@ cypress/
     userById.cy.js
   fixtures/
     product.json
-    user.json
   support/
     commands.js
     e2e.js
@@ -126,8 +134,6 @@ cypress.env.json.example
     ci.yml
 ```
 
----
-
 ## Observações
 
 - Nenhuma chave sensível está versionada.
@@ -135,3 +141,21 @@ cypress.env.json.example
 - Em caso de dúvidas sobre como rodar, consulte este README.
 
 ---
+
+## CI:
+
+O projeto possui CI configurado via GitHub Actions, executando os testes automaticamente a cada push ou pull request na branch main.
+
+CI executa:
+Instalação do Node e dependências
+Criação dinâmica do cypress.env.json via secret
+Execução dos testes com npm run full:report
+Upload do relatório mochawesome como artefato
+
+## Como configurar os secrets no GitHub
+Acesse seu repositório no GitHub.
+Vá em: Settings > Secrets and variables > Actions
+Clique em: New repository secret
+Nome: CYPRESS_ENV
+Valor: {"apiBaseUrl":"https://dummyjson.com","username":"seu user","password":"sua senha"}
+

@@ -1,18 +1,19 @@
 /// <reference types="cypress" />
 
-describe('Suíte completa de autenticação', () => {
-  let user;
+describe('Suíte - autenticação', () => {
+  let username;
+  let password;
+
   before(() => {
-    cy.fixture('user').then((u) => {
-      user = u;
-    });
+    username = Cypress.env('username');
+    password = Cypress.env('password');
   });
 
   it('CT1 - Deve autenticar e acessar dados do usuário', () => {
     cy.login().then(({ accessToken }) => {
       expect(accessToken).to.exist;
       cy.decodeJWT(accessToken).then((decoded) => {
-        expect(decoded.username).to.eq(user.username);
+        expect(decoded.username).to.eq(username);
       });
       cy.request({
         method: 'GET',
@@ -22,7 +23,7 @@ describe('Suíte completa de autenticação', () => {
         },
       }).then((res) => {
         expect(res.status).to.eq(200);
-        expect(res.body).to.have.property('username', user.username);
+        expect(res.body).to.have.property('username', username);
         expect(res.body).to.include.all.keys(
           'id',
           'username',
@@ -41,7 +42,7 @@ describe('Suíte completa de autenticação', () => {
       method: 'POST',
       url: 'https://dummyjson.com/auth/login',
       body: {
-        username: user.username,
+        username,
         password: 'senha_incorreta',
       },
       failOnStatusCode: false,
@@ -52,11 +53,9 @@ describe('Suíte completa de autenticação', () => {
   });
 
   it('CT3️ - Deve simular refresh de token (mock)', () => {
-    // DummyJSON não tem endpoint real de refresh, então simulamos
     cy.login().then(({ refreshToken }) => {
       expect(refreshToken).to.be.a('string');
-      // Simula novo token
-      const newAccessToken = refreshToken; // Em uma API real, você faria POST /auth/refresh
+      const newAccessToken = refreshToken; // Simulação
       cy.setAuthHeader(newAccessToken);
       cy.request({
         method: 'GET',
@@ -69,7 +68,6 @@ describe('Suíte completa de autenticação', () => {
   });
 
   it('CT4 - Deve detectar token expirado (simulado)', () => {
-    // Cria um token manualmente com expiração passada
     const expiredToken = [
       btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' })),
       btoa(JSON.stringify({ username: 'expiredUser', exp: 1 })),
@@ -89,14 +87,11 @@ describe('Suíte completa de autenticação', () => {
 
   it('CT5 - Deve remover tokens do localStorage ao fazer logout', () => {
     cy.login().then(() => {
-      // Verifica se os tokens foram armazenados
       cy.window().then((win) => {
         expect(win.localStorage.getItem('accessToken')).to.exist;
         expect(win.localStorage.getItem('refreshToken')).to.exist;
       });
-      // Executa o logout
       cy.logout();
-      // Verifica se os tokens foram removidos
       cy.window().then((win) => {
         expect(win.localStorage.getItem('accessToken')).to.be.null;
         expect(win.localStorage.getItem('refreshToken')).to.be.null;
@@ -105,31 +100,29 @@ describe('Suíte completa de autenticação', () => {
   });
 
   it('CT6 - Deve autenticar com senha em hash MD5 e retornar tokens válidos (se suportado)', () => {
-    cy.md5(user.password).then((hash) => {
+    cy.md5(password).then((hash) => {
       cy.request({
         method: 'POST',
         url: 'https://dummyjson.com/auth/login',
         body: {
-          username: user.username,
+          username,
           password: hash,
         },
         failOnStatusCode: false,
       }).then((response) => {
-        // DummyJSON não aceita hash, então esperamos falha
         expect([400, 401]).to.include(response.status);
       });
     });
   });
 
   it('CT7 - Deve gerar hash MD5 válido e enviá-lo no login', () => {
-    cy.md5(user.password).then((hash) => {
-      expect(hash).to.match(/^[a-f0-9]{32}$/); // Verifica formato do hash
-
+    cy.md5(password).then((hash) => {
+      expect(hash).to.match(/^[a-f0-9]{32}$/); // formato hash
       cy.request({
         method: 'POST',
         url: 'https://dummyjson.com/auth/login',
         body: {
-          username: user.username,
+          username,
           password: hash,
         },
         failOnStatusCode: false,
@@ -159,4 +152,4 @@ describe('Suíte completa de autenticação', () => {
       expect(res.body.message).to.eq('Invalid credentials');
     });
   });
-})
+});

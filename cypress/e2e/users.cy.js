@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
 
-import chaiJsonSchema from 'chai-json-schema';
-chai.use(chaiJsonSchema);
-
+// Importa o plugin de validação de JSON Schema
 const userSchema = {
   type: 'object',
   required: [
@@ -22,7 +20,7 @@ const userSchema = {
   }
 };
 
-describe('Verificação de Usuários - GET /users', () => {
+describe('Suíte - Usuários', () => {
   it('CT15 - Deve retornar status 200, 30 usuários por página e todos os campos obrigatórios', () => {
     cy.request('/users').then((response) => {
       expect(response.status).to.eq(200);

@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 
-describe('Criação de Produto - POST /auth/products/add', () => {
+describe('Suíte - Produto', () => {
   let token;
   before(() => {
-    cy.apiLogin().then(user => {
-      token = Cypress.env('token');
+    cy.apiLogin().then(t => {
+      token = t;
     });
   });
 

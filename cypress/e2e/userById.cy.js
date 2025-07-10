@@ -1,10 +1,9 @@
 /// <reference types="cypress" />
 
-describe('Consulta de Usuário por ID - GET /users/:id', () => {
+describe('Suíte - Consulta', () => {
   it('CT13 - Deve retornar todos os campos esperados para o usuário ID 1', () => {
     cy.request('/users/1').then((response) => {
       expect(response.status).to.eq(200);
-      // Validação de campos principais
       expect(response.body).to.include.all.keys(
         'id', 'firstName', 'lastName', 'maidenName', 'age', 'gender',
         'email', 'phone', 'username', 'password', 'birthDate', 'image',
@@ -12,14 +11,12 @@ describe('Consulta de Usuário por ID - GET /users/:id', () => {
         'macAddress', 'university', 'bank', 'company', 'ein', 'ssn', 'userAgent',
         'crypto', 'role'
       );
-      // Validações de tipo e conteúdo
       expect(response.body.id).to.eq(1);
       expect(response.body.firstName).to.be.a('string');
       expect(response.body.email).to.include('@');
       expect(response.body.birthDate).to.match(/^\d{4}-\d{1,2}-\d{1,2}$/);
       expect(response.body.macAddress).to.match(/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i);
       expect(['admin', 'moderator', 'user']).to.include(response.body.role);
-      // Validação de objetos aninhados
       expect(response.body.address).to.have.all.keys(
         'address', 'city', 'state', 'stateCode', 'postalCode', 'coordinates', 'country'
       );
