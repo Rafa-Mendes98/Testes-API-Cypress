@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Suíte - autenticação', () => {
+describe('Suíte - Autenticação', () => {
   let username;
   let password;
 
