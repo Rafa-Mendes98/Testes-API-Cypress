@@ -5,6 +5,16 @@ Cypress.Commands.add('md5', (input) => {
   return CryptoJS.MD5(input).toString(CryptoJS.enc.Hex);
 });
 
+Cypress.Commands.add('loginViaBrowser', (username, password) => {
+  cy.window().then((win) => {
+    return win.fetch('https://dummyjson.com/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    }).then(res => res.json());
+  });
+});
+
 Cypress.Commands.add('decodeJWT', (token) => {
   if (!token || typeof token !== 'string' || !token.includes('.')) {
     throw new Error('Token JWT inválido ou indefinido');
@@ -51,7 +61,6 @@ Cypress.Commands.add('apiLogin', () => {
   cy.fixture('user').then(user => {
     const username = Cypress.env('username') || user.username;
     const password = Cypress.env('password') || user.password;
-
     cy.request({
       method: 'POST',
       url: '/auth/login',

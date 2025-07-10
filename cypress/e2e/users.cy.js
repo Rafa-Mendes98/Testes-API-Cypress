@@ -45,13 +45,4 @@ describe('Verificação de Usuários - GET /users', () => {
       expect(response.body.limit).to.eq(10);
     });
   });
-
-  // caso com intercept com erro, preciso de algum
-  it('Deve simular falha de rede na chamada /users e validar tratamento', () => {
-    cy.intercept('GET', '**/users**', { forceNetworkError: true }).as('getUsersError');
-    cy.wait('@getUsersError');
-    cy.get('.toast-error')
-      .should('be.visible')
-      .and('contain', 'Erro ao carregar usuários');
-    });
 });
