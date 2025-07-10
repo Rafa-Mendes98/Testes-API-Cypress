@@ -14,6 +14,6 @@ module.exports = defineConfig({
     reportDir: 'mochawesome-report',
     overwrite: false,
     html: true,
-    json: true
+    json: false
   }
 });

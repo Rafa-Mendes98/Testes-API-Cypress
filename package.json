@@ -5,7 +5,9 @@
   "scripts": {
     "test": "cypress run",
     "cy:open": "cypress open",
-    "report": "cypress run --reporter mochawesome"
+    "test:report": "cypress run --reporter cypress-mochawesome-reporter",
+    "report:open": "start mochawesome-report/index.html",
+    "full:report": "npm run test:report && npm run report:open"
   },
   "author": "Seu Nome",
   "license": "MIT",
@@ -15,6 +17,8 @@
     "cypress": "^13.0.0",
     "cypress-mochawesome-reporter": "^3.5.0",
     "jwt-decode": "^4.0.0",
-    "mochawesome": "^7.1.3"
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
   }
 }
